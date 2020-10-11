@@ -1,2 +1,6 @@
-# Awaitable
- 
+## Awaitable
+### A naive implementation of custom awaitable type. 
+<p></p>
+<p>When writing game logics in Unity, I often find myself writing lots of callbacks. Now I want to avoid the callback hell using await and async feature. However, using the default provided Task, you can not fully control the update behaviour of your tasks, while it is a common feature to implement something like slow motion or pause feature in your games. In these situations, you will want to have full control over the update behaviour of you tasks. The advantage of coroutine is that you can use yield return to write better async code, but the downside is coroutines can not have retuen values. You can use Tasks, but you can not control the update. So I wrote these base classes to provide a foundation to build your own awaitable classes while they are updated by a MonoBehaviour. </P>
+<p>I provide here is just a foundation, or an idea of implementing such a thing. There is no test code nor examples at this stage. It is up to you to extend or modify so that they fit into your design and your game.</P>
+<p>Any sugguestions are welcomed!</P>
