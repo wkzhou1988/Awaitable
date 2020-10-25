@@ -171,7 +171,7 @@ namespace Simple.Threading.Tasks {
             Continuation?.Invoke();
             IsDestroyed = true;
         }
-
+        #pragma warning disable CS0693
         public struct BaseTaskAwaiter<T> : INotifyCompletion {
             private BaseAwaitableTask<T> _awaitableTask;
 
@@ -193,5 +193,6 @@ namespace Simple.Threading.Tasks {
             }
         }
     }
+
 
 }
