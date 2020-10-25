@@ -29,16 +29,22 @@ namespace Simple.Threading.Tasks {
                 var task = cur.Value;
 
                 try {
-                    if (!task.IsStarted) task.Start();
-
-                    if (task.IsCompleted) {
+                    if (task.IsDestroyed) {
                         _tasks.Remove(cur);
-                        task.Complete();
                     }
                     else {
-                        task.Update(deltaTime);
+                        if (!task.IsStarted) task.Start();
+
+                        if (task.IsCompleted) {
+                            _tasks.Remove(cur);
+                            task.Complete();
+                        }
+                        else {
+                            task.Update(deltaTime);
+                        }
                     }
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                     _tasks.Remove(cur);
                     task.ExceptionDispatchInfo = ExceptionDispatchInfo.Capture(ex);
                     task.Cancel();

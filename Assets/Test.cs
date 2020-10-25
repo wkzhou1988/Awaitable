@@ -1,22 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Simple.Threading.Tasks;
+using System;
+using System.Threading.Tasks;
 using UnityEngine;
-using Simple.Threading.Tasks;
 
-public class Test : MonoBehaviour
-{
-    // Start is called before the first frame update
-    async void Start()
-    {
-        Debug.Log("1111");
-        var t = Awaitable.Delay(1);
-        await t;
-        Debug.Log("2222");
+public class Test : MonoBehaviour {
+
+    private async void Start() {
+        await Task.Delay(TimeSpan.FromSeconds(1));
+        Debug.Log("0000");
+        var i = await Do();
+        Debug.Log($"3333 {i}");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    private async BaseAwaitableTask<int> Do() {
+        Debug.Log("1111");
+        await Awaitable.Delay(1);
+        Debug.Log("2222");
+        return 1;
     }
 }

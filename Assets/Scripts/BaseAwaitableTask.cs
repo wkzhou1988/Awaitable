@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Simple.Runtime.CompilerServices;
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 
 namespace Simple.Threading.Tasks {
 
     public interface ITask {
+        bool IsDestroyed { get; }
         bool IsCompleted { get; }
         bool IsStarted { get; }
         bool IsCancelled { get; }
@@ -15,7 +17,11 @@ namespace Simple.Threading.Tasks {
         ExceptionDispatchInfo ExceptionDispatchInfo { get; set; }
     }
 
-    public abstract class BaseAwaitableTask : ITask {
+    [AsyncMethodBuilder(typeof(SimpleAsyncMethodBuilder))]
+    public class BaseAwaitableTask : ITask {
+        protected bool _isInQueue = false;
+
+        public bool IsDestroyed { get; protected set; }
 
         public bool IsCompleted { get; protected set; }
 
@@ -39,7 +45,9 @@ namespace Simple.Threading.Tasks {
             return null;
         }
 
-        public abstract void Update(float dt);
+        public virtual void Update(float dt) {
+
+        }
 
 
         protected virtual void BeforeRun() {
@@ -47,9 +55,12 @@ namespace Simple.Threading.Tasks {
         }
 
         public BaseTaskAwaiter GetAwaiter() {
+            if (!_isInQueue) {
+                BeforeRun();
+                _isInQueue = true;
+                AwaitableTaskQueue.Instance.Add(this);
+            }
 
-            BeforeRun();
-            AwaitableTaskQueue.Instance.Add(this);
             return new BaseTaskAwaiter(this);
         }
 
@@ -60,6 +71,7 @@ namespace Simple.Threading.Tasks {
         public void Complete() {
             OnComplete();
             Continuation?.Invoke();
+            IsDestroyed = true;
         }
 
         protected virtual void OnCancel() {
@@ -70,9 +82,10 @@ namespace Simple.Threading.Tasks {
             IsCancelled = true;
             OnCancel();
             Continuation?.Invoke();
+            IsDestroyed = true;
         }
 
-        public class BaseTaskAwaiter : INotifyCompletion {
+        public struct BaseTaskAwaiter : INotifyCompletion {
             private BaseAwaitableTask _awaitableTask;
 
             public BaseTaskAwaiter(BaseAwaitableTask awaitableTask) {
@@ -94,10 +107,15 @@ namespace Simple.Threading.Tasks {
         }
     }
 
+    [AsyncMethodBuilder(typeof(SimpleAsyncMethodBuilder<>))]
     public abstract class BaseAwaitableTask<T> : ITask {
+        protected bool _isInQueue = false;
+
+        public bool IsDestroyed { get; protected set; }
+
         public bool IsCompleted { get; protected set; }
 
-        public bool IsStarted { get; protected set;}
+        public bool IsStarted { get; protected set; }
 
         public bool IsCancelled { get; protected set; }
 
@@ -107,15 +125,20 @@ namespace Simple.Threading.Tasks {
 
         public abstract T GetResult();
 
-        public abstract void Update(float dt);
+        public virtual void Update(float dt) {
+
+        }
 
         protected virtual void BeforeRun() {
 
         }
 
         public BaseTaskAwaiter<T> GetAwaiter() {
-            BeforeRun();
-            AwaitableTaskQueue.Instance.Add(this);
+            if (!_isInQueue) {
+                BeforeRun();
+                _isInQueue = true;
+                AwaitableTaskQueue.Instance.Add(this);
+            }
             return new BaseTaskAwaiter<T>(this);
         }
 
@@ -131,10 +154,11 @@ namespace Simple.Threading.Tasks {
         protected virtual void OnComplete() {
 
         }
-        
+
         public void Complete() {
             OnComplete();
             Continuation?.Invoke();
+            IsDestroyed = true;
         }
 
         protected virtual void OnCancel() {
@@ -145,9 +169,10 @@ namespace Simple.Threading.Tasks {
             IsCancelled = true;
             OnCancel();
             Continuation?.Invoke();
+            IsDestroyed = true;
         }
 
-        public class BaseTaskAwaiter<T> : INotifyCompletion {
+        public struct BaseTaskAwaiter<T> : INotifyCompletion {
             private BaseAwaitableTask<T> _awaitableTask;
 
             public BaseTaskAwaiter(BaseAwaitableTask<T> awaitableTask) {

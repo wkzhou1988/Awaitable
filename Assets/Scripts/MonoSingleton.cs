@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Simple {
     public class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T> {
