@@ -4,12 +4,12 @@ using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 
 namespace Simple.Runtime.CompilerServices {
-    public class SimpleAsyncMethodBuilder {
-        private AwaitableEmpty _task;
+    public class SimpleAsyncVoidMethodBuilder {
+        private AwaitableMethodTask _task;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static SimpleAsyncMethodBuilder Create() {
-            return new SimpleAsyncMethodBuilder();
+        public static SimpleAsyncVoidMethodBuilder Create() {
+            return new SimpleAsyncVoidMethodBuilder();
         }
 
         public BaseAwaitableTask Task => _task;
@@ -42,7 +42,7 @@ namespace Simple.Runtime.CompilerServices {
         public void Start<TStateMachine>(ref TStateMachine stateMachine)
             where TStateMachine : IAsyncStateMachine {
             if (_task == null) {
-                _task = AwaitableEmpty.Create();
+                _task = AwaitableMethodTask.Create();
             }
             stateMachine.MoveNext();
         }
@@ -53,12 +53,12 @@ namespace Simple.Runtime.CompilerServices {
     }
 
 
-    public class SimpleAsyncMethodBuilder<T> {
-        private AwaitableEmpty<T> _task;
+    public class SimpleAsyncTaskMethodBuilder<T> {
+        private AwaitableMethodTask<T> _task;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static SimpleAsyncMethodBuilder<T> Create() {
-            return new SimpleAsyncMethodBuilder<T>();
+        public static SimpleAsyncTaskMethodBuilder<T> Create() {
+            return new SimpleAsyncTaskMethodBuilder<T>();
         }
 
         public BaseAwaitableTask<T> Task => _task;
@@ -92,7 +92,7 @@ namespace Simple.Runtime.CompilerServices {
         public void Start<TStateMachine>(ref TStateMachine stateMachine)
             where TStateMachine : IAsyncStateMachine {
             if (_task == null) {
-                _task = AwaitableEmpty<T>.Create();
+                _task = AwaitableMethodTask<T>.Create();
             }
             stateMachine.MoveNext();
         }

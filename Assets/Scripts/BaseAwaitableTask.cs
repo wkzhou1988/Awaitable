@@ -17,7 +17,7 @@ namespace Simple.Threading.Tasks {
         ExceptionDispatchInfo ExceptionDispatchInfo { get; set; }
     }
 
-    [AsyncMethodBuilder(typeof(SimpleAsyncMethodBuilder))]
+    [AsyncMethodBuilder(typeof(SimpleAsyncVoidMethodBuilder))]
     public class BaseAwaitableTask : ITask {
         protected bool _isInQueue = false;
 
@@ -107,7 +107,7 @@ namespace Simple.Threading.Tasks {
         }
     }
 
-    [AsyncMethodBuilder(typeof(SimpleAsyncMethodBuilder<>))]
+    [AsyncMethodBuilder(typeof(SimpleAsyncTaskMethodBuilder<>))]
     public abstract class BaseAwaitableTask<T> : ITask {
         protected bool _isInQueue = false;
 
