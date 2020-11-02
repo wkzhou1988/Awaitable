@@ -5,14 +5,14 @@ using System.Runtime.ExceptionServices;
 
 namespace Simple.Runtime.CompilerServices {
     public class SimpleAsyncVoidMethodBuilder {
-        private AwaitableMethodTask _task;
+        private AsyncMethodTask _task;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SimpleAsyncVoidMethodBuilder Create() {
             return new SimpleAsyncVoidMethodBuilder();
         }
 
-        public BaseAwaitableTask Task => _task;
+        public AwaitableTask Task => _task;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetException(Exception exception) {
@@ -42,7 +42,7 @@ namespace Simple.Runtime.CompilerServices {
         public void Start<TStateMachine>(ref TStateMachine stateMachine)
             where TStateMachine : IAsyncStateMachine {
             if (_task == null) {
-                _task = AwaitableMethodTask.Create();
+                _task = AsyncMethodTask.Create();
             }
             stateMachine.MoveNext();
         }
@@ -61,7 +61,7 @@ namespace Simple.Runtime.CompilerServices {
             return new SimpleAsyncTaskMethodBuilder<T>();
         }
 
-        public BaseAwaitableTask<T> Task => _task;
+        public AwaitableTask<T> Task => _task;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetException(Exception exception) {

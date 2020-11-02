@@ -1,13 +1,9 @@
 ﻿namespace Simple.Threading.Tasks {
-    public class AwaitableDelay : BaseAwaitableTask<float> {
+    public class Delay : AwaitableTask {
         private float delay;
         private float timePassed;
 
-        public AwaitableDelay(float delay) => this.delay = delay;
-
-        public override float GetResult() {
-            return timePassed;
-        }
+        public Delay(float delay) => this.delay = delay;
 
         public override void Update(float dt) {
             if (IsCompleted) return;

@@ -1,7 +1,7 @@
 ﻿namespace Simple.Threading.Tasks {
-    public class AwaitableWhenAny : BaseAwaitableTask<int> {
-        private BaseAwaitableTask[] tasks;
-        public AwaitableWhenAny(params BaseAwaitableTask[] tasks) {
+    public class WhenAny : AwaitableTask {
+        private AwaitableTask[] tasks;
+        public WhenAny(params AwaitableTask[] tasks) {
             this.tasks = tasks;
         }
 
@@ -10,10 +10,6 @@
             foreach (var task in tasks) {
                 task.GetAwaiter();
             }
-        }
-
-        public override int GetResult() {
-            return 1;
         }
 
         public override void Update(float dt) {

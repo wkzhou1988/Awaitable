@@ -1,72 +1,65 @@
 ﻿using System;
-using DefaultNamespace;
 
 namespace Simple.Threading.Tasks
 {
     public static class Awaitable
     {
-        public static AwaitableWhenAll WhenAll(params BaseAwaitableTask[] tasks)
+        public static WhenAll WhenAll(params ITask[] tasks)
         {
-            return new AwaitableWhenAll(tasks);
+            return new WhenAll(tasks);
         }
 
-        public static AwaitableWhenAny WhenAny(params BaseAwaitableTask[] tasks)
+        public static WhenAny WhenAny(params AwaitableTask[] tasks)
         {
-            return new AwaitableWhenAny(tasks);
+            return new WhenAny(tasks);
         }
 
-        public static AwaitableDelay Delay(float seconds)
+        public static Delay Delay(float seconds)
         {
-            return new AwaitableDelay(seconds);
+            return new Delay(seconds);
         }
 
         #region CallbackWrapper
-        public static AwaitableCallbackWrapper WaitCallback(out Action callbackWrapper)
+        public static Action WaitCallback(out CallbackTask task)
         {
-            var task = new AwaitableCallbackWrapper();
-            callbackWrapper = task.GetWrapper();
-            return task;
+            task = new CallbackTask();
+            return task.GetWrapper();
         }
 
-        public static AwaitableCallbackWrapper<TResult> WaitCallback<TResult>(out Action<TResult> callbackWrapper)
+        public static Action<TResult> WaitCallback<TResult>(out CallbackTask<TResult> task)
         {
-            var task = new AwaitableCallbackWrapper<TResult>();
-            callbackWrapper = task.GetWrapper();
-            return task;
+            task = new CallbackTask<TResult>();
+            return task.GetWrapper();
         }
 
-        public static AwaitableCallbackWrapper<TResult1, TResult2> WaitCallback<TResult1, TResult2>(
-            out Action<TResult1, TResult2> callbackWrapper)
+        public static Action<TResult1, TResult2> WaitCallback<TResult1, TResult2>(
+            out CallbackTask<TResult1, TResult2> task)
         {
-            var task = new AwaitableCallbackWrapper<TResult1, TResult2>();
-            callbackWrapper = task.GetWrapper();
-            return task;
+            task = new CallbackTask<TResult1, TResult2>();
+            return task.GetWrapper();
         }
 
-        public static AwaitableCallbackWrapper<TResult1, TResult2, TResult3> WaitCallback<TResult1, TResult2, TResult3>(
-            out Action<TResult1, TResult2, TResult3> callbackWrapper)
+        public static Action<TResult1, TResult2, TResult3> WaitCallback<TResult1, TResult2, TResult3>(
+            out CallbackTask<TResult1, TResult2, TResult3> task)
         {
-            var task = new AwaitableCallbackWrapper<TResult1, TResult2, TResult3>();
-            callbackWrapper = task.GetWrapper();
-            return task;
+            task = new CallbackTask<TResult1, TResult2, TResult3>();
+            return task.GetWrapper();
         }
 
-        public static AwaitableCallbackWrapper<TResult1, TResult2, TResult3, TResult4> WaitCallback<TResult1, TResult2,
+        public static Action<TResult1, TResult2, TResult3, TResult4> WaitCallback<TResult1, TResult2,
             TResult3, TResult4>(
-            out Action<TResult1, TResult2, TResult3, TResult4> callbackWrapper)
+            out CallbackTask<TResult1, TResult2, TResult3, TResult4> task)
         {
-            var task = new AwaitableCallbackWrapper<TResult1, TResult2, TResult3, TResult4>();
-            callbackWrapper = task.GetWrapper();
-            return task;
+            task = new CallbackTask<TResult1, TResult2, TResult3, TResult4>();
+            return task.GetWrapper();
         }
 
-        public static AwaitableCallbackWrapper<TResult1, TResult2, TResult3, TResult4, TResult5> WaitCallback<TResult1,
+        public static Action<TResult1, TResult2, TResult3, TResult4, TResult5> WaitCallback<TResult1,
             TResult2, TResult3, TResult4, TResult5>(
-            out Action<TResult1, TResult2, TResult3, TResult4, TResult5> callbackWrapper)
+            out CallbackTask<TResult1, TResult2, TResult3, TResult4, TResult5> task)
         {
-            var task = new AwaitableCallbackWrapper<TResult1, TResult2, TResult3, TResult4, TResult5>();
-            callbackWrapper = task.GetWrapper();
-            return task;
+            task = new CallbackTask<TResult1, TResult2, TResult3, TResult4, TResult5>();
+            return task.GetWrapper();
         }
         #endregion
     }

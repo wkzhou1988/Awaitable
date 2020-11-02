@@ -1,14 +1,14 @@
 ﻿namespace Simple.Threading.Tasks {
-    public class AwaitableMethodTask : BaseAwaitableTask {
-        public static AwaitableMethodTask FromCompleted() {
-            var task = new AwaitableMethodTask();
+    public class AsyncMethodTask : AwaitableTask {
+        public static AsyncMethodTask FromCompleted() {
+            var task = new AsyncMethodTask();
             task.Start();
             task.IsCompleted = true;
             return task;
         }
 
-        public static AwaitableMethodTask Create() {
-            var task = new AwaitableMethodTask();
+        public static AsyncMethodTask Create() {
+            var task = new AsyncMethodTask();
             task.Start();
             return task;
         }
@@ -18,7 +18,7 @@
         }
     }
 
-    public class AwaitableMethodTask<T> : BaseAwaitableTask<T> {
+    public class AwaitableMethodTask<T> : AwaitableTask<T> {
         private T _result;
 
         public static AwaitableMethodTask<T> FromCompleted() {

@@ -15,10 +15,11 @@ namespace Simple.Threading.Tasks {
         void Cancel();
         void Update(float dt);
         ExceptionDispatchInfo ExceptionDispatchInfo { get; set; }
+        INotifyCompletion InternalGetAwaiter();
     }
 
     [AsyncMethodBuilder(typeof(SimpleAsyncVoidMethodBuilder))]
-    public class BaseAwaitableTask : ITask {
+    public abstract class AwaitableTask : ITask {
         protected bool _isInQueue = false;
 
         public bool IsDestroyed { get; protected set; }
@@ -54,14 +55,18 @@ namespace Simple.Threading.Tasks {
 
         }
 
-        public BaseTaskAwaiter GetAwaiter() {
+        public Awaiter GetAwaiter() {
             if (!_isInQueue) {
                 BeforeRun();
                 _isInQueue = true;
                 AwaitableTaskQueue.Instance.Add(this);
             }
 
-            return new BaseTaskAwaiter(this);
+            return new Awaiter(this);
+        }
+
+        public INotifyCompletion InternalGetAwaiter() {
+            return GetAwaiter();
         }
 
         protected virtual void OnComplete() {
@@ -85,10 +90,10 @@ namespace Simple.Threading.Tasks {
             IsDestroyed = true;
         }
 
-        public struct BaseTaskAwaiter : INotifyCompletion {
-            private BaseAwaitableTask _awaitableTask;
+        public struct Awaiter : INotifyCompletion {
+            private AwaitableTask _awaitableTask;
 
-            public BaseTaskAwaiter(BaseAwaitableTask awaitableTask) {
+            public Awaiter(AwaitableTask awaitableTask) {
                 _awaitableTask = awaitableTask;
             }
 
@@ -108,7 +113,7 @@ namespace Simple.Threading.Tasks {
     }
 
     [AsyncMethodBuilder(typeof(SimpleAsyncTaskMethodBuilder<>))]
-    public abstract class BaseAwaitableTask<T> : ITask {
+    public abstract class AwaitableTask<T> : ITask {
         protected bool _isInQueue = false;
 
         public bool IsDestroyed { get; protected set; }
@@ -133,13 +138,17 @@ namespace Simple.Threading.Tasks {
 
         }
 
-        public BaseTaskAwaiter<T> GetAwaiter() {
+        public Awaiter<T> GetAwaiter() {
             if (!_isInQueue) {
                 BeforeRun();
                 _isInQueue = true;
                 AwaitableTaskQueue.Instance.Add(this);
             }
-            return new BaseTaskAwaiter<T>(this);
+            return new Awaiter<T>(this);
+        }
+
+        public INotifyCompletion InternalGetAwaiter() {
+            return GetAwaiter();
         }
 
         protected virtual void OnStart() {
@@ -172,10 +181,10 @@ namespace Simple.Threading.Tasks {
             IsDestroyed = true;
         }
         #pragma warning disable CS0693
-        public struct BaseTaskAwaiter<T> : INotifyCompletion {
-            private BaseAwaitableTask<T> _awaitableTask;
+        public struct Awaiter<T> : INotifyCompletion {
+            private AwaitableTask<T> _awaitableTask;
 
-            public BaseTaskAwaiter(BaseAwaitableTask<T> awaitableTask) {
+            public Awaiter(AwaitableTask<T> awaitableTask) {
                 _awaitableTask = awaitableTask;
             }
 
