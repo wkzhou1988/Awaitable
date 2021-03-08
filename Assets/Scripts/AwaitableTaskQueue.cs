@@ -45,7 +45,7 @@ namespace Simple.Threading.Tasks {
                     }
                 }
                 catch (Exception ex) {
-                    _tasks.Remove(cur);
+                    if (_tasks.Contains(cur.Value)) _tasks.Remove(cur);
                     task.ExceptionDispatchInfo = ExceptionDispatchInfo.Capture(ex);
                     task.Cancel();
                 }
